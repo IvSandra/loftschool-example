@@ -27,9 +27,11 @@ function defaultParameterValue(a, b = 100) {
  */
 function returnArgumentsArray() {
     var args = [];
+
     for (var i = 0; i < arguments.length; i++) {
-    args[i] = arguments[i];
-}
+        args[i] = arguments[i];
+    }
+
     return args;
 }
 
@@ -40,6 +42,7 @@ function returnArgumentsArray() {
  */
 function returnFnResult(fn) {
     var result = fn();
+
     return result;
 }
 
@@ -51,8 +54,8 @@ function returnFnResult(fn) {
  */
 function returnCounter(number = 0) {
     return function F() {
-    return ++number;
-}
+        return ++number;
+    }
 }
 
 /*
@@ -65,11 +68,10 @@ function bindFunction(fn, arg1, arg2) {
     return fn.bind(null, arg1, arg2);   
 }
 
-
 export {
     returnFirstArgument,
     defaultParameterValue,
-    returnArgumentsArray,c
+    returnArgumentsArray,
     returnFnResult,
     returnCounter,
     bindFunction
