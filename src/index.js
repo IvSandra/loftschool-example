@@ -8,7 +8,7 @@ function forEach(array, fn) {
 	for (var i = 0; i < array.length; i++) {
 		fn(array[i], i, array);
 }
-
+}
 /*
  Задача 2:
  Напишите аналог встроенного метода map для работы с массивами
@@ -55,7 +55,7 @@ function deleteProperty(obj, prop) {
  Функция должна проверить существует ли указанное свойство в указанном объекте
  */
 function hasProperty(obj, prop) {
-	obj.hasOwnProperty([prop]);
+    obj.hasOwnProperty([prop]);
 }
 
 /*
