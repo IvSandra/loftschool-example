@@ -30,10 +30,12 @@ function map(array, fn) {
 function reduce(array, fn, initial) {
 	if (initial == null) {
 		var result = array[0];
+        var i = 1; 
 	} else {
-		result = initial;
+            result = initial;
+            i = 0;
 	}
-    for (var i = 1; i < array.length; i++) {
+    for (;i < array.length; i++) {
         result = fn(result, array[i], i, array);
     }
 
@@ -55,7 +57,7 @@ function deleteProperty(obj, prop) {
  Функция должна проверить существует ли указанное свойство в указанном объекте
  */
 function hasProperty(obj, prop) {
-    obj.hasOwnProperty([prop]);
+   return obj.hasOwnProperty([prop]);
 }
 
 /*
