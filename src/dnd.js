@@ -25,10 +25,15 @@ let homeworkContainer = document.querySelector('#homework-container');
 function createDiv() {
 	var div = document.createElement('div');
 	div.className = 'draggable-div';
+	//div.setAttribute('draggable', 'true');
     div.style.position = 'absolute'; 
     div.style.backgroundColor = 'green'; 
-    div.style.width = '50px';
-    div.style.height = '30px'; 
+    div.style.top = '180px';
+    div.style.left = '180px'; 
+    div.style.width = '70px';
+    div.style.height = '50px'; 
+
+    return div;
 }
 
 /**
@@ -37,6 +42,19 @@ function createDiv() {
  * @param {Element} target
  */
 function addListeners(target) {
+	target.addListeners('dragstart', function(e) {
+		e.target.style.opacity = '0.4';
+		e.dataTransfer.effectAllowed = 'move';
+		e.dataTransfer.setData('text/html', target.innerHTML);
+	}, false);
+
+	target.addListeners('drop', function(e) {
+		target.innerHTML = e.dataTransfer.getData('text/html');
+	});
+
+	target.addListeners('dragend', function(e) {
+		e.target.style.opacity = '';
+	}, false);
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
