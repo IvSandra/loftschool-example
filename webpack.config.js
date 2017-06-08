@@ -15,8 +15,7 @@ loaders.push({
 
 module.exports = {
     entry: {
-        main: './src/index.js',
-        cookie: './src/cookie.js'
+        main: './src/script.js',
     },
     output: {
         filename: '[name].[hash].js',
@@ -36,14 +35,7 @@ module.exports = {
         new ExtractTextPlugin('styles.css'),
         new HtmlPlugin({
             title: 'Main Homework',
-            template: 'index.hbs',
-            chunks: ['main']
-        }),
-        new HtmlPlugin({
-            title: 'Div Drag And Drop',
-            template: 'cookie.hbs',
-            filename: 'cookie.html',
-            chunks: ['cookie']
+            template: 'index.html'
         }),
         new CleanWebpackPlugin(['dist'])
     ]
