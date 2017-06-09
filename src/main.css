@@ -12,7 +12,7 @@ body {
      
 
 }
-#headerInfo {
+#info {
   margin: 0;
   padding: 10px 10px 10px 20px;
 }
@@ -37,7 +37,7 @@ body {
   text-align: center;
 }
 
-#inputSearch1 {
+#filterInput1 {
   width: 97%;
   height: 42px;
   border-radius: 50px;
@@ -45,7 +45,7 @@ body {
   border-style: none;
   outline: none;
 }
-#inputSearch2 {
+#filterInput2 {
   width: 97%;
   height: 42px;
   border-radius: 50px;
@@ -53,16 +53,46 @@ body {
   border-style: none;
   outline: none;
 }
-#friends {
-  display: inline-block;
+#myfriends {
+  margin: 20px 10px 10px 30px;
+  display: inline-block; 
   width: 48%;
-  margin: 10px 10px 10px 10px;  
 }
 #selected {
-  display: inline-block;
+  margin: 20px 10px 10px 30px;
+  display: inline-block; 
   width: 48%;
-  margin: 10px 10px 10px 10px;  
+}
+
+#listfriends {
+  display: inline-block; 
+  width: 48%;
+  margin: 20px 10px 10px 10px;  
+}
+
+#selectedfriends {
+  display: inline-block; 
+  width: 48%;
+  margin: 20px 10px 10px 10px;  
+}
+
+.friend {
+  width: 350px;
+  display: flex;
+  margin: 10px 30px 30px 10px;
+
+}
+.friend .name {
+  font-weight: bold;
+  display: inline-flex; 
+  align-items: center;
   padding-left: 15px;
+}
+
+.friend img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
 }
 
 
