@@ -47,16 +47,14 @@ var templateFn = Handlebars.compile(template);
 new Promise(resolve => window.onload = resolve)
     .then(() => vkInit())
     .then(() => vkApi('friends.get', {fields: 'photo_200'}))
-    .then(response => friends.innerHTML = templateFn(response))
+    .then(response => listfriends.innerHTML = templateFn(response))
     .catch(e => alert('Ошибка: ' + e.message));
 
-var filterInput = container.querySelector('#filterInput1');
-var listFriends = container.querySelector('#listfriends');
 
-var friends = JSON.parse(response);    
+var parsefriends = JSON.parse(response);    
 
-filterInput.addEventListener('keyup', function () {
-    listFriends.innerHTML = friends.filter(items => 
-    first_name.include(filterInput.value) || last_name.includes(filterInput.value))
+filterInput1.addEventListener('keyup', function () {
+    listfriends.innerHTML = parsefriends.filter(items => 
+    first_name.includes(filterInput1.value) || last_name.includes(filterInput1.value))
     .join('');
 })

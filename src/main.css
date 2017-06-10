@@ -53,12 +53,7 @@ body {
   border-style: none;
   outline: none;
 }
-#myfriends {
-  margin: 20px 10px 10px 30px;
-  display: inline-block; 
-  width: 48%;
-}
-#selected {
+.myfriends {
   margin: 20px 10px 10px 30px;
   display: inline-block; 
   width: 48%;
