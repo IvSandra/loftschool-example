@@ -8,10 +8,9 @@ body {
 .header {
   color:  white;
   background-color:  #E48565;
-  border-style: none;
-     
-
+  border-style: none;     
 }
+
 #info {
   margin: 0;
   padding: 10px 10px 10px 20px;
@@ -53,10 +52,16 @@ body {
   border-style: none;
   outline: none;
 }
-.myfriends {
+#myfriends {
+  margin: 20px 30px 10px 20px;
+  display: inline-block; 
+  width: 46%;
+}
+
+#selected {
   margin: 20px 10px 10px 30px;
   display: inline-block; 
-  width: 48%;
+  width: 46%;
 }
 
 #listfriends {

@@ -34,7 +34,7 @@ function vkInit() {
 
 var template = `
 {{#each items}}
-    <div class="friend">
+    <div class="friend" draggable="true">
         <img src="{{photo_200}}">
         <div class="name">{{first_name}} {{last_name}}</div>
     </div>
@@ -42,19 +42,35 @@ var template = `
 `;
 
 var templateFn = Handlebars.compile(template);
-
+var friends;
 
 new Promise(resolve => window.onload = resolve)
     .then(() => vkInit())
     .then(() => vkApi('friends.get', {fields: 'photo_200'}))
-    .then(response => listfriends.innerHTML = templateFn(response))
+    .then(response => {
+        friends = response;
+        listfriends.innerHTML = templateFn(friends);
+    })
     .catch(e => alert('Ошибка: ' + e.message));
 
 
-var parsefriends = JSON.parse(response);    
-
 filterInput1.addEventListener('keyup', function () {
-    listfriends.innerHTML = parsefriends.filter(items => 
-    first_name.includes(filterInput1.value) || last_name.includes(filterInput1.value))
-    .join('');
+    const data = friends.items
+    .filter(item => item.first_name.includes(filterInput1.value) || item.last_name.includes(filterInput1.value))
+    listfriends.innerHTML = templateFn({items: data});
+});
+
+
+listfriends.addEventListener('dragstart', function (event) {
+    event.dataTransfer.setData("text", event.target.className);
+})
+
+listfriends.addEventListener('dragover', function (event) {
+    event.preventDefault();
+})
+
+selectedfriends.addEventListener('drop', function (event) {
+    event.preventDefault();
+    var drag = event.dataTransfer.getData("text");
+    event.target.appendChild(listfriends.getElementsByClassName(drag));
 })
