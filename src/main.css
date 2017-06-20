@@ -77,9 +77,10 @@ body {
 }
 
 .friend {
-  width: 350px;
+  width: 700px;
   display: flex;
   margin: 10px 30px 30px 10px;
+  position: relative;
 
 }
 .friend .name {
@@ -97,11 +98,12 @@ body {
 
 
 #footer {
-  
   background-color:  #E6E6E6;
   border-style: none;
-  height: 70px;     
+  height: 70px;
+  position: relative;     
 }
+
 #footer button {
   background-color: #E48565;
   border: none;
@@ -112,7 +114,15 @@ body {
   display: inline-block;
   border-radius: 20px;
   font-size: 16px;
-  float: right;
+  position: absolute;
   margin: 10px 10px 10px 10px;
   outline: none;
+  right: 0; bottom: 0;
+}
+
+.friend i {
+  position: absolute;
+  font-size:30px;
+  color: #E6E6E6;
+  right: 0; bottom: 45px;
 }

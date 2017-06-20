@@ -34,10 +34,13 @@ function vkInit() {
 
 var template = `
 {{#each items}}
-    <div class="friend" draggable="true">
+
+    <div class="friend" draggable="true" data-id={{id}}>
         <img src="{{photo_200}}">
         <div class="name">{{first_name}} {{last_name}}</div>
+        <i class="fa fa-plus"></i>
     </div>
+
 {{/each}}
 `;
 
@@ -53,7 +56,7 @@ new Promise(resolve => window.onload = resolve)
     })
     .catch(e => alert('Ошибка: ' + e.message));
 
-
+//Filter
 filterInput1.addEventListener('keyup', function () {
     const data = friends.items
     .filter(item => item.first_name.includes(filterInput1.value) || item.last_name.includes(filterInput1.value))
@@ -61,16 +64,34 @@ filterInput1.addEventListener('keyup', function () {
 });
 
 
+//Drag & Drop
 listfriends.addEventListener('dragstart', function (event) {
-    event.dataTransfer.setData("text", event.target.className);
+    var data = event.target.dataset.id;
+    event.dataTransfer.setData("text", data);
 })
 
-listfriends.addEventListener('dragover', function (event) {
+selectedfriends.addEventListener('dragover', function (event) {
     event.preventDefault();
 })
 
 selectedfriends.addEventListener('drop', function (event) {
     event.preventDefault();
     var drag = event.dataTransfer.getData("text");
-    event.target.appendChild(listfriends.getElementsByClassName(drag));
+    event.target.appendChild(document.querySelector(`[data-id="${drag}"]`));
+})
+
+//
+listfriends.addEventListener('click', function(event) {
+    if (event.target.getAttribute("class") == "fa fa-plus") {
+    event.target.setAttribute("class", "fa fa-close");
+    var parent = event.target.parentNode;
+    selectedfriends.insertBefore(parent, selectedfriends.firstChild);
+}
+})
+
+selectedfriends.addEventListener('click', function(event) {
+    if (event.target.getAttribute("class") == "fa fa-close") {
+    event.target.setAttribute("class", "fa fa-plus");
+    listfriends.appendChild(event.target.parentNode);
+}
 })
