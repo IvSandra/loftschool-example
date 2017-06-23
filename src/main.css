@@ -64,8 +64,12 @@ body {
   width: 46%;
 }
 
+#vkfriends {
+display: flex;
+}
+
 #listfriends {
-  display: inline-block; 
+  display: inline-block;  
   width: 48%;
   margin: 20px 10px 10px 10px;  
 }
@@ -96,15 +100,21 @@ body {
   border-radius: 50%;
 }
 
+.friend i {
+  position: absolute;
+  font-size:30px;
+  color: #E6E6E6;
+  right: 0; bottom: 45px;
+}
 
 #footer {
   background-color:  #E6E6E6;
   border-style: none;
   height: 70px;
-  position: relative;     
+  position: relative;  
 }
 
-#footer button {
+#footer #savebutton {
   background-color: #E48565;
   border: none;
   color: white;
@@ -120,9 +130,4 @@ body {
   right: 0; bottom: 0;
 }
 
-.friend i {
-  position: absolute;
-  font-size:30px;
-  color: #E6E6E6;
-  right: 0; bottom: 45px;
-}
+

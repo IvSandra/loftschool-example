@@ -84,8 +84,7 @@ selectedfriends.addEventListener('drop', function (event) {
 listfriends.addEventListener('click', function(event) {
     if (event.target.getAttribute("class") == "fa fa-plus") {
     event.target.setAttribute("class", "fa fa-close");
-    var parent = event.target.parentNode;
-    selectedfriends.insertBefore(parent, selectedfriends.firstChild);
+    selectedfriends.appendChild(event.target.parentNode);
 }
 })
 
@@ -95,3 +94,21 @@ selectedfriends.addEventListener('click', function(event) {
     listfriends.appendChild(event.target.parentNode);
 }
 })
+
+//Save
+function filter() {
+var saved = JSON.parse(localStorage.getItem("mykey"));
+var savelist = friends.items.filter(item => !saved.includes(item.id));
+var saveselected = friends.items.filter(item => saved.includes(item.id));
+listfriends.innerHTML = templateFn({items: savelist});
+selectedfriends.innerHTML = templateFn({items: saveselected});
+}
+
+savebutton.addEventListener('click', function() {
+    var selecteddata = [].map.call(selectedfriends.querySelectorAll('[data-id]'), 
+        item => item.dataset.id)
+    var serialdata = JSON.stringify(selecteddata);
+    localStorage.setItem("mykey", serialdata);
+    filter()
+})
+
