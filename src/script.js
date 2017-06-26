@@ -46,23 +46,31 @@ var template = `
 
 var templateFn = Handlebars.compile(template);
 var friends;
+var saved = JSON.parse(localStorage.getItem("mykey"));
 
 new Promise(resolve => window.onload = resolve)
     .then(() => vkInit())
     .then(() => vkApi('friends.get', {fields: 'photo_200'}))
     .then(response => {
         friends = response;
-        listfriends.innerHTML = templateFn(friends);
+        listfriends.innerHTML = templateFn({items: friends.items.filter(item => !saved.includes(item.id))});
+        selectedfriends.innerHTML = templateFn({items: friends.items.filter(item => saved.includes(item.id))})
     })
     .catch(e => alert('Ошибка: ' + e.message));
 
 //Filter
 filterInput1.addEventListener('keyup', function () {
-    const data = friends.items
+    var listdata = friends.items
     .filter(item => item.first_name.includes(filterInput1.value) || item.last_name.includes(filterInput1.value))
-    listfriends.innerHTML = templateFn({items: data});
+    listfriends.innerHTML = templateFn({items: listdata});
 });
 
+filterInput2.addEventListener('keyup', function () {
+    var filterfriends = friends.items.filter(item => saved.includes(item.id))
+    var filterdata = filterfriends.filter(item => item.first_name.includes(filterInput2.value) || 
+        item.last_name.includes(filterInput2.value))
+    selectedfriends.innerHTML = templateFn({items: filterdata});
+});
 
 //Drag & Drop
 listfriends.addEventListener('dragstart', function (event) {
@@ -78,9 +86,10 @@ selectedfriends.addEventListener('drop', function (event) {
     event.preventDefault();
     var drag = event.dataTransfer.getData("text");
     event.target.appendChild(document.querySelector(`[data-id="${drag}"]`));
+    document.querySelector(`[data-id="${drag}"]`).className = "fa fa-close";   
 })
 
-//
+//appendChild
 listfriends.addEventListener('click', function(event) {
     if (event.target.getAttribute("class") == "fa fa-plus") {
     event.target.setAttribute("class", "fa fa-close");
@@ -96,19 +105,10 @@ selectedfriends.addEventListener('click', function(event) {
 })
 
 //Save
-function filter() {
-var saved = JSON.parse(localStorage.getItem("mykey"));
-var savelist = friends.items.filter(item => !saved.includes(item.id));
-var saveselected = friends.items.filter(item => saved.includes(item.id));
-listfriends.innerHTML = templateFn({items: savelist});
-selectedfriends.innerHTML = templateFn({items: saveselected});
-}
-
-savebutton.addEventListener('click', function() {
+    savebutton.addEventListener('click', function() {
     var selecteddata = [].map.call(selectedfriends.querySelectorAll('[data-id]'), 
         item => item.dataset.id)
     var serialdata = JSON.stringify(selecteddata);
     localStorage.setItem("mykey", serialdata);
-    filter()
 })
 
