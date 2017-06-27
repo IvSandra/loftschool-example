@@ -86,7 +86,7 @@ selectedfriends.addEventListener('drop', function (event) {
     event.preventDefault();
     var drag = event.dataTransfer.getData("text");
     event.target.appendChild(document.querySelector(`[data-id="${drag}"]`));
-    document.querySelector(`[data-id="${drag}"]`).className = "fa fa-close";   
+    document.querySelector(`[data-id="${drag}"] i`).className = "fa fa-close";;   
 })
 
 //appendChild
