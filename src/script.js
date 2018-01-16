@@ -32,113 +32,78 @@ function vkInit() {
     });
 }
 
-function geocode(adress) {
-    return ymaps.geocode(adress).then(result => {
-        var points = result.geoObjects.toArray();
-
-        if (points.length) {
-            return points[0].geometry.getCoordinates();
-        }
-
-    });
-}
-
-
-var myMap;
-var clusterer;
-var names;
-var photos;
-var customItemContentLayout;
+var template = `
+{{#each items}}
+ <div class="friend" draggable="true" data-id={{id}}>
+        <img src="{{photo_200}}">
+        <div class="name">{{first_name}} {{last_name}}</div>
+        <i class="fa fa-plus"></i>
+</div>
+{{/each}}
+`;
+var templateFn = Handlebars.compile(template);
+var friends;
+var saved = JSON.parse(localStorage.getItem("mykey"));
 
 new Promise(resolve => window.onload = resolve)
-    .then(() => vkInit())
-    .then(response => new Promise(resolve => ymaps.ready(resolve)))
-    .then(() => vkApi('friends.get', {fields: 'photo_200, city, country'}))
-    .then(friends => {
-        myMap = new ymaps.Map('map', {
-        center: [59.94, 30.19], // Санкт-Петербург
-        zoom: 5
-    }, {
-        searchControlProvider: 'yandex#search'
-    });
+     .then(() => vkInit())
+    .then(() => vkApi('friends.get', {fields: 'photo_200'}))
+    .then(response => {
+        friends = response;
+        listfriends.innerHTML = templateFn({items: friends.items.filter(item => !saved.includes(item.id))});
+        selectedfriends.innerHTML = templateFn({items: friends.items.filter(item => saved.includes(item.id))})
+    })
+    .catch(e => alert('Ошибка: ' + e.message));
 
-    customItemContentLayout = ymaps.templateLayoutFactory.createClass(
-        '<h2 class=ballon_header>{{ properties.balloonContentHeader }}</h2>' +
-        '<div class=ballon_body><img src="{{ properties.balloonContentBody }}"></div>' 
-    );
-    
-        clusterer = new ymaps.Clusterer({
-        clusterDisableClickZoom: true,
-        clusterOpenBalloonOnClick: true,
-        clusterBalloonPanelMaxMapArea: 0,
-        clusterBalloonContentLayoutWidth: 350,
-        clusterBalloonItemContentLayout: customItemContentLayout,
-        clusterBalloonLeftColumnWidth: 120
-    });
+//Filter
+filterInput1.addEventListener('keyup', function () {
+    var listdata = friends.items
+    .filter(item => item.first_name.includes(filterInput1.value) || item.last_name.includes(filterInput1.value))
+    listfriends.innerHTML = templateFn({items: listdata});
+});
 
-    myMap.geoObjects.add(clusterer);
+filterInput2.addEventListener('keyup', function () {
+    var filterfriends = friends.items.filter(item => saved.includes(item.id))
+    var filterdata = filterfriends.filter(item => item.first_name.includes(filterInput2.value) || 
+        item.last_name.includes(filterInput2.value))
+    selectedfriends.innerHTML = templateFn({items: filterdata});
+});
 
-    return friends.items;
+//Drag & Drop
+listfriends.addEventListener('dragstart', function (event) {
+    var data = event.target.dataset.id;
+    event.dataTransfer.setData("text", data);
 })
 
-    .then(friends => {
+selectedfriends.addEventListener('dragover', function (event) {
+    event.preventDefault();
+})
 
-       names = friends
-       .filter(friend => friend.country || friend.city)   
-       .map(friend => friend.first_name + ' ' + friend.last_name)
-
-       photos = friends
-       .filter(friend => friend.country || friend.city)   
-       .map(friend => friend.photo_200)
-
-       var promises = friends
-        .filter(friend => friend.country && friend.country.title)   
-        .map(friend => {
-            var parts = friend.country.title;
-            if (friend.city) {
-                parts += ' ' + friend.city.title;
-            }
-            return parts;
-        })
-        .map(string => geocode(string))
-
-       
-    return Promise.all(promises);
-})    
-
-    .then(coords => {
-        console.log(coords);
-    var placemarks = [];    
-    for (var i = 0; i < coords.length; i++) {
-    var placemark = new ymaps.Placemark(coords[i], {
-            // Устаналиваем данные, которые будут отображаться в балуне.
-            balloonContentHeader: getContentHeader(i),
-            balloonContentBody: getContentBody(i)
-        }, {
-
-            balloonContentLayout: customItemContentLayout    
-
-        });
-        placemarks.push(placemark);
-    }
-        clusterer.add(placemarks);
-}) 
-
-    
-.catch(e => alert('Ошибка: ' + e.message));
-
- function getContentHeader (num) {
-       
-    var  placemarkHeader = names;
-    return placemarkHeader[num % placemarkHeader.length];
-}
- function getContentBody (num) {
-       
-    var  placemarkBodies = photos;
-    return placemarkBodies[num % placemarkBodies.length];
+selectedfriends.addEventListener('drop', function (event) {
+    event.preventDefault();
+    var drag = event.dataTransfer.getData("text");
+    event.target.appendChild(document.querySelector(`[data-id="${drag}"]`));
+    document.querySelector(`[data-id="${drag}"] i`).className = "fa fa-close";;   
+})
+//appendChild
+listfriends.addEventListener('click', function(event) {
+    if (event.target.getAttribute("class") == "fa fa-plus") {
+    event.target.setAttribute("class", "fa fa-close");
+    selectedfriends.appendChild(event.target.parentNode);
 }
 
-   
-     
-   
+})
 
+selectedfriends.addEventListener('click', function(event) {
+    if (event.target.getAttribute("class") == "fa fa-close") {
+    event.target.setAttribute("class", "fa fa-plus");
+    listfriends.appendChild(event.target.parentNode);
+}
+})
+//Save
+    savebutton.addEventListener('click', function() {
+    var selecteddata = [].map.call(selectedfriends.querySelectorAll('[data-id]'), 
+        item => item.dataset.id)
+    var serialdata = JSON.stringify(selecteddata);
+    localStorage.setItem("mykey", serialdata);
+})
